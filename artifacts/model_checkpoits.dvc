@@ -1,0 +1,6 @@
+outs:
+- md5: 910966a919dd0cd5a169b28f107af8ed.dir
+  size: 32832888
+  nfiles: 1
+  hash: md5
+  path: model_checkpoits
