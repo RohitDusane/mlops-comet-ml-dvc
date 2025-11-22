@@ -1,0 +1,8 @@
+anime/
+artifacts/weights/
+artifacts/raw/
+artifacts/processed/
+artifacts/model/
+artifacts/model_checkpoits/
+Anime_Recommeder_System.egg-info/
+logs/
