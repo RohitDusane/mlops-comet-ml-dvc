@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Anime Recommendations</title>
+    <!-- Link to Bootstrap for easy styling -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.1.3/css/bootstrap.min.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}"> <!-- Link to custom CSS -->
+</head>
+
+<body>
+    <!-- Main Container -->
+    <div class="container mt-5">
+        <h1 class="text-center mb-4">Anime Recommendation System</h1>
+
+        <!-- Form for User Input -->
+        <form method="POST" class="mt-4">
+            <div class="mb-3">
+                <label for="userID" class="form-label">Enter User ID</label>
+                <input type="text" class="form-control" id="userID" name="userID" required>
+            </div>
+            <button type="submit" class="btn btn-primary">Get Recommendations</button>
+        </form>
+
+        <!-- Flash Messages -->
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                <div class="alert alert-warning mt-3">
+                    {% for category, message in messages %}
+                        <strong>{{ category }}:</strong> {{ message }}<br>
+                    {% endfor %}
+                </div>
+            {% endif %}
+        {% endwith %}
+
+        <!-- Display Recommendations -->
+        {% if recommendations %}
+            <h3 class="mt-4">Recommended Anime:</h3>
+            <ul class="list-group">
+                {% for anime in recommendations %}
+                    <li class="list-group-item">{{ anime }}</li>
+                {% endfor %}
+            </ul>
+        {% endif %}
+    </div>
+
+    <!-- Bootstrap Bundle for JS functionality -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.1.3/js/bootstrap.bundle.min.js"></script>
+</body>
+
+</html>

@@ -11,3 +11,5 @@ joblib
 scikit-learn
 comet-ml
 dvc
+dvc-gs
+flask

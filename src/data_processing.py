@@ -41,13 +41,25 @@ class DataProcessor:
         except Exception as e:
             raise CustomException("Failed to load data",sys)
         
+    # def filter_users(self, min_rating=400):
+    #     try:
+    #         n_rating = self.rating_df['user_id'].value_counts()
+    #         self.rating_df = self.rating_df[self.rating_df['user_id'].isin(n_rating[n_rating>=400].index)].copy()
+    #         logging.info("Filtered users sucesfully...")
+    #         logging.info(f"Filtered out users with fewer than {min_rating} ratings. Remaining users: {self.rating_df['user_id'].nunique()}")
+    #     except Exception as e:
+    #         logging.error(f"Error in filter_users: {str(e)}")
+    #         raise CustomException("Failed to filter users based on rating threshold.", sys)
+        
     def filter_users(self, min_rating=400):
         try:
-            n_rating = self.rating_df['user_id'].value_counts()
-            self.rating_df = self.rating_df[self.rating_df['user_id'].isin(n_rating[n_rating>=400].index)].copy()
-            logging.info("Filtered users sucesfully...")
+            user_counts = self.rating_df.groupby('user_id').size()
+            self.rating_df = self.rating_df[self.rating_df['user_id'].isin(user_counts[user_counts >= min_rating].index)].copy()
+            logging.info(f"Filtered out users with fewer than {min_rating} ratings. Remaining users: {self.rating_df['user_id'].nunique()}")
         except Exception as e:
-            raise CustomException("Failed to filter data",sys)
+            logging.error(f"Error in filter_users: {str(e)}")
+            raise CustomException("Failed to filter users based on rating threshold.", sys)
+
         
     def scale_ratings(self):
         try:
@@ -139,9 +151,10 @@ class DataProcessor:
                     name = anime_df[anime_df.anime_id == anime_id].eng_version.values[0]
                     if name is np.nan:
                         name = anime_df[anime_df.anime_id == anime_id].Name.values[0]
-                except:
-                    print("Error")
+                except Exception as e:
+                    logging.error(f"Error fetching anime name for anime_id: {anime_id} - {str(e)}")
                 return name
+
             
             anime_df["anime_id"] = anime_df["MAL_ID"]
             anime_df["eng_version"] = anime_df["English name"]
@@ -157,14 +170,14 @@ class DataProcessor:
             
             anime_df = anime_df[["anime_id" , "eng_version","Score","Genres","Episodes","Type","Premiered","Members"]]
 
-            def getSynopsis(anime,anime_df):
-                if isinstance(anime,int):
-                    return synopsis_df[synopsis_df.MAL_ID == anime].sypnopsis.values[0]
-                if isinstance(anime, str):
-                    return synopsis_df[synopsis_df.Name == anime].sypnopsis.values[0]
+            # def getSynopsis(anime,anime_df):
+            #     if isinstance(anime,int):
+            #         return synopsis_df[synopsis_df.MAL_ID == anime].sypnopsis.values[0]
+            #     if isinstance(anime, str):
+            #         return synopsis_df[synopsis_df.Name == anime].sypnopsis.values[0]
 
-            anime_df.to_csv(ANIME_DF, index=False)
-            synopsis_df.to_csv(SYNOPISIS_DF, index=False)
+            # anime_df.to_csv(ANIME_DF, index=False)
+            # synopsis_df.to_csv(SYNOPISIS_DF, index=False)
             logging.info("ANIME_DF AND SYNOPSIS_Df saved sucesfullyy...")
         except Exception as e:
             raise CustomException("Failed to save animje and anime_synopsis data",sys)
@@ -188,9 +201,3 @@ class DataProcessor:
 if __name__=='__main__':
     data_processor_obj = DataProcessor(ANIMELIST_CSV, PROCESSED_DIR)
     data_processor_obj.processor_run()
-
-
-    
-
-
-             

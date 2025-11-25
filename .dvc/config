@@ -1,0 +1,4 @@
+[core]
+    remote = myanime
+['remote "myanime"']
+    url = gs://my-anime-dvc-24/
