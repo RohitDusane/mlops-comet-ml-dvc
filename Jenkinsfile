@@ -19,20 +19,20 @@ pipeline {
             }
         }
 
-        stage("Making a virtual environment...."){
-            steps{
-                script{
-                    echo 'Making a virtual environment...'
-                    sh '''
-                    python -m venv ${VENV_DIR}
-                    . ${VENV_DIR}/bin/activate
-                    pip install --upgrade pip
-                    pip install -e .
-                    pip install  dvc
-                    '''
-                }
-            }
-        }
+        // stage("Making a virtual environment...."){
+        //     steps{
+        //         script{
+        //             echo 'Making a virtual environment...'
+        //             sh '''
+        //             python -m venv ${VENV_DIR}
+        //             . ${VENV_DIR}/bin/activate
+        //             pip install --upgrade pip
+        //             pip install -e .
+        //             pip install  dvc
+        //             '''
+        //         }
+        //     }
+        // }
 
 
 
