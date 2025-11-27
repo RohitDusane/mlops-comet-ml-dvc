@@ -37,7 +37,7 @@ pipeline {
 
         stage('DVC Pull'){
             steps{
-                withCredentials([file(credentialsId:'gcp-key' , variable: 'GOOGLE_APPLICATION_CREDENTIALS' )]){
+                withCredentials([file(credentialsId:'anime-gcp' , variable: 'GOOGLE_APPLICATION_CREDENTIALS' )]){
                     script{
                         echo 'DVC Pul....'
                         sh '''
@@ -53,7 +53,7 @@ pipeline {
 
         stage('Build and Push Image to GCR') {
             steps {
-                withCredentials([file(credentialsId: 'gcp-key', variable: 'GOOGLE_APPLICATION_CREDENTIALS')]) {
+                withCredentials([file(credentialsId: 'anime-gcp', variable: 'GOOGLE_APPLICATION_CREDENTIALS')]) {
                     script {
                         echo 'Build and Push Image to GCR'
                         sh '''
@@ -74,7 +74,7 @@ pipeline {
 
         stage('Deploying to Kubernetes'){
             steps{
-                withCredentials([file(credentialsId:'gcp-key' , variable: 'GOOGLE_APPLICATION_CREDENTIALS' )]){
+                withCredentials([file(credentialsId:'anime-gcp' , variable: 'GOOGLE_APPLICATION_CREDENTIALS' )]){
                     script{
                         echo 'Deploying to Kubernetes'
                         sh '''
