@@ -1,5 +1,8 @@
 
-FROM python:3.8-slim
+FROM python:3.8
+
+
+
 
 # Set environment variables to prevent Python from writing .pyc files & Ensure Python output is not buffered
 ENV PYTHONDONTWRITEBYTECODE=1 \
