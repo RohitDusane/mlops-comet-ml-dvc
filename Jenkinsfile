@@ -14,7 +14,7 @@ pipeline {
             steps{
                 script{
                     echo 'Cloning from Github...'
-                    checkout scmGit(branches: [[name: '*/main']], extensions: [], userRemoteConfigs: [[credentialsId: 'github-tokens-2', url: 'https://github.com/RohitDusane/mlops-comet-ml-dvc.git']])
+                    checkout scmGit(branches: [[name: '*/main']], extensions: [], userRemoteConfigs: [[credentialsId: 'git-token', url: 'https://github.com/RohitDusane/mlops-comet-ml-dvc.git']])
                 }
             }
         }
@@ -39,7 +39,7 @@ pipeline {
             steps{
                 withCredentials([file(credentialsId:'anime-gcp' , variable: 'GOOGLE_APPLICATION_CREDENTIALS' )]){
                     script{
-                        echo 'DVC Pul....'
+                        echo 'DVC Pull....'
                         sh '''
                         . ${VENV_DIR}/bin/activate
                         dvc pull
