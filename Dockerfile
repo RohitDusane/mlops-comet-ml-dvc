@@ -10,7 +10,7 @@ ENV PYTHONDONTWRITEBYTECODE=1 \
 # Install system dependencies required by TensorFlow
 RUN apt-get update && apt-get install -y \
     build-essential \
-    libopenblas-dev \  # Replacing libatlas-base-dev with libopenblas-dev
+    libopenblas-dev \  # Replacing libatlas-base-dev with libopenblas-dev    
     libhdf5-dev \
     libprotobuf-dev \
     protobuf-compiler \
