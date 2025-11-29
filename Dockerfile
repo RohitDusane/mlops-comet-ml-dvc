@@ -10,7 +10,7 @@ ENV PYTHONDONTWRITEBYTECODE=1 \
 # Install system dependencies required by TensorFlow
 RUN apt-get update && apt-get install -y \
     build-essential \
-    libatlas-base-dev \
+    libopenblas-dev \  # Replacing libatlas-base-dev with libopenblas-dev
     libhdf5-dev \
     libprotobuf-dev \
     protobuf-compiler \
@@ -25,10 +25,12 @@ WORKDIR /app
 COPY . .
 
 # Install dependencies from requirements.txt
-RUN pip install --no-cache-dir -e .
+# RUN pip install --no-cache-dir -e .
+RUN pip install --no-cache-dir -r requirements.txt
+
 
 # Train the model before running the application
-RUN python pipeline/training_pipeline.py
+# RUN python pipeline/training_pipeline.py
 
 # Expose the port that Flask will run on
 EXPOSE 5000
