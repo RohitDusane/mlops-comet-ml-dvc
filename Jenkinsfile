@@ -37,7 +37,7 @@ pipeline {
 
         stage('DVC Pull'){
             steps{
-                withCredentials([file(credentialsId:'anime-gcp' , variable: 'GOOGLE_APPLICATION_CREDENTIALS' )]){
+                withCredentials([file(credentialsId: 'anime-gcp' , variable: 'GOOGLE_APPLICATION_CREDENTIALS' )]){
                     script{
                         echo 'DVC Pull....'
                         sh '''
@@ -63,7 +63,7 @@ pipeline {
                         gcloud auth configure-docker --quiet
                         
                         # Build and push docker image to GCR
-                        docker build -t gcr.io/${GCP_PROJECT}/anime-project:latest .
+                        docker build --no-cache -t gcr.io/credit-risk-071125/anime-project:latest .
                         docker push gcr.io/${GCP_PROJECT}/anime-project:latest
                         '''
                     }
@@ -74,7 +74,7 @@ pipeline {
 
         stage('Deploying to Kubernetes'){
             steps{
-                withCredentials([file(credentialsId:'anime-gcp' , variable: 'GOOGLE_APPLICATION_CREDENTIALS' )]){
+                withCredentials([file(credentialsId: 'anime-gcp' , variable: 'GOOGLE_APPLICATION_CREDENTIALS' )]){
                     script{
                         echo 'Deploying to Kubernetes'
                         sh '''
