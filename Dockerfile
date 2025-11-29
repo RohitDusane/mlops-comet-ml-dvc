@@ -1,5 +1,5 @@
 # Python Images
-FROM python:3.11
+FROM python:3.9-slim-bullseye
 
 # Set environment variables to prevent Python from writing .pyc files & Ensure Python output is not buffered
 ENV PYTHONDONTWRITEBYTECODE=1 \
