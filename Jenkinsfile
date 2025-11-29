@@ -63,7 +63,7 @@ pipeline {
                         gcloud auth configure-docker --quiet
                         
                         # Build and push docker image to GCR
-                        docker build --no-cache -t gcr.io/credit-risk-071125/anime-project:latest -f docker/Dockerfile .
+                        docker build --no-cache -t gcr.io/credit-risk-071125/anime-project:latest -f Dockerfile .
                         docker push gcr.io/${GCP_PROJECT}/anime-project:latest
                         '''
                     }
