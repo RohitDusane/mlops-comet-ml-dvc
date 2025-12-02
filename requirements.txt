@@ -3,10 +3,11 @@ numpy
 setuptools
 google-cloud-storage
 pyyaml
-matplotlib
-tensorflow
+# matplotlib
+# tensorflow
+tensorflow-cpu
 tensorflow.keras
-wordcloud
+# wordcloud
 joblib
 scikit-learn
 comet-ml
