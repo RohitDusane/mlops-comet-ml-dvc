@@ -6,7 +6,7 @@ pyyaml
 # matplotlib
 # tensorflow
 # tensorflow-cpu
-tensorflow==2.18
+tensorflow==2.20
 tensorflow.keras
 # wordcloud
 joblib
