@@ -5,8 +5,8 @@ google-cloud-storage
 pyyaml
 # matplotlib
 # tensorflow
-# tensorflow-cpu
-tensorflow==2.20
+tensorflow-cpu
+# tensorflow==2.20
 tensorflow.keras
 # wordcloud
 joblib
