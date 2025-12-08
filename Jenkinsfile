@@ -19,20 +19,26 @@ pipeline {
             }
         }
 
-        stage("Making a virtual environment...."){
-            steps{
-                script{
+        stage("Making a virtual environment....") {
+            steps {
+                script {
                     echo 'Making a virtual environment...'
                     sh '''
+                    # Create the virtual environment
                     python -m venv ${VENV_DIR}
-                    . ${VENV_DIR}/bin/activate
+
+                    # Activate the virtual environment and install dependencies
+                    source ${VENV_DIR}/bin/activate
+
+                    # Upgrade pip and install the required packages
                     pip install --upgrade pip
-                    pip install -e .
+                    pip install -r requirements.txt
                     pip install dvc
                     '''
                 }
             }
         }
+
 
 
         // stage('DVC Pull'){
