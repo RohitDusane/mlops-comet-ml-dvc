@@ -28,7 +28,7 @@ pipeline {
                     python -m venv ${VENV_DIR}
 
                     # Activate the virtual environment and install dependencies
-                    source ${VENV_DIR}/bin/activate
+                    . ${VENV_DIR}/bin/activate
 
                     # Upgrade pip and install the required packages
                     pip install --upgrade pip
