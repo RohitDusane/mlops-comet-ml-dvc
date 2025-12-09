@@ -7,19 +7,12 @@ FROM jenkins/jenkins:lts-jdk17
 USER root
 
 # Install prerequisites and Docker
-RUN apt-get update -y || true && \
-    apt-get install -y \
-    apt-transport-https \
-    ca-certificates \
-    curl \
-    gnupg && \
-    curl -fsSL https://download.docker.com/linux/debian/gpg | tee /etc/apt/trusted.gpg.d/docker.asc && \
-    echo "deb [arch=amd64 signed-by=/etc/apt/trusted.gpg.d/docker.asc] https://download.docker.com/linux/debian bullseye stable" > /etc/apt/sources.list.d/docker.list && \
-    apt-get update -y || true && \
-    apt-get install -y \
-    docker-ce \
-    docker-ce-cli \
-    containerd.io && \
+RUN apt-get update -y && \
+    apt-get install -y apt-transport-https ca-certificates curl gnupg software-properties-common && \
+    curl -fsSL https://download.docker.com/linux/debian/gpg | apt-key add - && \
+    echo "deb [arch=amd64] https://download.docker.com/linux/debian bullseye stable" > /etc/apt/sources.list.d/docker.list && \
+    apt-get update -y && \
+    apt-get install -y docker-ce docker-ce-cli containerd.io && \
     apt-get clean
 
     
