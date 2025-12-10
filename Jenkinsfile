@@ -15,6 +15,7 @@ pipeline {
                 script{
                     echo 'Cloning from Github...'
                     checkout scmGit(branches: [[name: '*/main']], extensions: [], userRemoteConfigs: [[credentialsId: 'git-token', url: 'https://github.com/RohitDusane/mlops-comet-ml-dvc.git']])
+                    
                 }
             }
         }
