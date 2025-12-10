@@ -48,12 +48,18 @@ pipeline {
                     catchError(buildResult: 'FAILURE', stageResult: 'FAILURE') {
                         echo 'Making a virtual environment...'
                         sh '''
+                        # Create the virtual environment
                         python -m venv ${VENV_DIR}
+
+                        # Activate the virtual environment and install dependencies
                         source ${VENV_DIR}/bin/activate
+
+                        # Upgrade pip and install the required packages
                         pip install --upgrade pip
-                        pip install -r requirements.txt
+                        pip install -r requirements.txt --no-cache-dir
                         pip install dvc
                         '''
+
                     }
                 }
             }
