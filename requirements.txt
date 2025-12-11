@@ -5,13 +5,13 @@ google-cloud-storage
 pyyaml
 # matplotlib
 # tensorflow
-tensorflow-cpu
+# tensorflow-cpu
 # tensorflow==2.20
 tensorflow.keras
 # wordcloud
 joblib
 scikit-learn
 comet-ml
-dvc
+# dvc
 dvc-gs
 flask

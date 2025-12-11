@@ -3,9 +3,9 @@ pipeline {
 
     environment{
             VENV_DIR = 'venv'
-            GCP_PROJECT = 'credit-risk-071125'
-            GCLOUD_PATH = "/var/jenkins_home/google-cloud-sdk/bin"
-            KUBECTL_AUTH_PLUGIN = "/usr/lib/google-cloud-sdk/bin"
+            // GCP_PROJECT = 'credit-risk-071125'
+            // GCLOUD_PATH = "/var/jenkins_home/google-cloud-sdk/bin"
+            // KUBECTL_AUTH_PLUGIN = "/usr/lib/google-cloud-sdk/bin"
         }
 
     stages{
@@ -57,6 +57,7 @@ pipeline {
                         # Upgrade pip and install the required packages
                         pip install --upgrade pip
                         pip install -r requirements.txt --no-cache-dir
+                        pip install tensorflow-cpu
                         pip install dvc
                         '''
 
