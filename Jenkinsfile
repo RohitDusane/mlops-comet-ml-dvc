@@ -58,6 +58,7 @@ pipeline {
                         pip install --upgrade pip
                         pip install -r requirements.txt --no-cache-dir
                         pip install tensorflow-cpu
+                        pip install colorama==0.4.5
                         pip install dvc
                         '''
 
