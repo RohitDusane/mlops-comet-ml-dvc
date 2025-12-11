@@ -1,5 +1,6 @@
 # Use the Jenkins image as the base image
-FROM jenkins/jenkins:lts
+# FROM jenkins/jenkins:lts
+FROM jenkins/jenkins:latest
 
 # Switch to root user to install dependencies
 USER root
