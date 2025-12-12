@@ -1,13 +1,11 @@
-# Python Images
-# FROM python:3.9-slim-bullseye
+# Base image
 FROM python:3.11-slim
 
-
-# Set environment variables to prevent Python from writing .pyc files & Ensure Python output is not buffered
+# Environment variables
 ENV PYTHONDONTWRITEBYTECODE=1 \
     PYTHONUNBUFFERED=1
 
-# Install system dependencies required by TensorFlow
+# Install system dependencies
 RUN apt-get update && apt-get install -y --no-install-recommends \
        build-essential \
        libopenblas-dev \
@@ -18,22 +16,25 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
 
-# Set the working directory
+# Set working directory
 WORKDIR /app
 
-# Copy the application code
+# Copy code & requirements
 COPY . .
 
-# Install dependencies from requirements.txt
-# RUN pip install --no-cache-dir -e .
+# Install Python dependencies
 RUN pip install --no-cache-dir -r requirements.txt
 
+# Install TensorFlow separately (optional, you could include in requirements.txt)
+RUN pip install tensorflow-cpu==2.20.0 --no-cache-dir --progress-bar=on -v
+RUN pip install dvc --no-cache-dir
 
-# Train the model before running the application
+# (Optional) Pre-train model during image build
+# Be careful: this makes image building slow
 # RUN python pipeline/training_pipeline.py
 
-# Expose the port that Flask will run on
+# Expose Flask port
 EXPOSE 5000
 
-# Command to run the app
+# Run the app
 CMD ["python", "app.py"]
