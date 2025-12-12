@@ -12,7 +12,7 @@ tensorflow.keras
 joblib
 scikit-learn
 comet-ml
-colorama==0.4.6
+colorama==0.4.5
 # dvc
 dvc-gs
 flask
