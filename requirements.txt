@@ -4,7 +4,7 @@ setuptools
 google-cloud-storage
 pyyaml
 # matplotlib
-# tensorflow
+tensorflow
 # tensorflow-cpu
 # tensorflow==2.20
 tensorflow.keras
