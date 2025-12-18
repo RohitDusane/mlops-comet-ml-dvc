@@ -3,9 +3,9 @@ numpy
 setuptools
 google-cloud-storage
 pyyaml
-# matplotlib
-tensorflow
-# tensorflow-cpu
+# matplotlib/
+# tensorflow
+tensorflow-cpu
 # tensorflow==2.20
 tensorflow.keras
 # wordcloud
