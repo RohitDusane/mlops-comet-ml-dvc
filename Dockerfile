@@ -1,9 +1,15 @@
-# Stage 1: build system dependencies
-FROM python:3.9-slim AS builder
+# Base image
+FROM python:3.9-slim
 
+# Environment variables
+ENV PYTHONDONTWRITEBYTECODE=1 \
+    PYTHONUNBUFFERED=1
+
+# Install system dependencies required for TensorFlow & Python packages
 RUN apt-get update && apt-get install -y --no-install-recommends \
     build-essential \
     libopenblas-dev \
+    libatlas3-base \
     libhdf5-dev \
     libprotobuf-dev \
     protobuf-compiler \
@@ -12,17 +18,19 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     git \
     && apt-get clean && rm -rf /var/lib/apt/lists/*
 
+
+# Set working directory
 WORKDIR /app
+
+# Copy project files
 COPY . .
 
+# Install Python dependencies + TensorFlow + DVC in a single layer
 RUN pip install --no-cache-dir -r requirements.txt \
-    && pip install --no-cache-dir dvc
+    && pip install --no-cache-dir tensorflow-cpu==2.13.0 dvc
 
-# Stage 2: final image
-FROM tensorflow/tensorflow:2.13.0-cpu-slim
-
-WORKDIR /app
-COPY --from=builder /app /app
-
+# Expose Flask port
 EXPOSE 5000
+
+# Run the app
 CMD ["python", "app.py"]
