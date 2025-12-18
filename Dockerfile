@@ -27,7 +27,7 @@ COPY . .
 
 # Install Python dependencies + TensorFlow + DVC in a single layer
 RUN pip install --no-cache-dir --default-timeout=600 --retries 10 -r requirements.txt \
-    && pip install --no-cache-dir --default-timeout=600 --retries 10 tensorflow-cpu==2.13.0 dvc \
+    && pip install --no-cache-dir --default-timeout=600 --retries 10 tensorflow-cpu dvc \
     && rm -rf /root/.cache/pip
 
 
