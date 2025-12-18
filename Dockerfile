@@ -1,37 +1,32 @@
 # Base image
-FROM python:3.8-slim
+FROM python:3.9-slim
 
-# Set environment variables to prevent Python from writing .pyc files & Ensure Python output is not buffered
+# Environment variables
 ENV PYTHONDONTWRITEBYTECODE=1 \
     PYTHONUNBUFFERED=1
 
-# Install system dependencies required by TensorFlow
-RUN apt-get update && apt-get install -y \
+# Install system dependencies required for TensorFlow & Python packages
+RUN apt-get update && apt-get install -y --no-install-recommends \
     build-essential \
     libatlas-base-dev \
     libhdf5-dev \
     libprotobuf-dev \
     protobuf-compiler \
     python3-dev \
+    curl \
+    git \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
 
 # Set working directory
 WORKDIR /app
 
-# Copy code & requirements
+# Copy project files
 COPY . .
 
-# Install Python dependencies
-RUN pip install --no-cache-dir -r requirements.txt
-
-# Install TensorFlow separately (optional, you could include in requirements.txt)
-RUN pip install tensorflow-cpu==2.13.0 --no-cache-dir --progress-bar=on -v
-RUN pip install dvc --no-cache-dir
-
-# (Optional) Pre-train model during image build
-# Be careful: this makes image building slow
-# RUN python pipeline/training_pipeline.py
+# Install Python dependencies + TensorFlow + DVC in a single layer
+RUN pip install --no-cache-dir -r requirements.txt \
+    && pip install --no-cache-dir tensorflow-cpu==2.13.0 dvc
 
 # Expose Flask port
 EXPOSE 5000

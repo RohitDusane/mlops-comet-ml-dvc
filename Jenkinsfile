@@ -31,7 +31,9 @@ pipeline {
                         export PATH=$PATH:${GCLOUD_PATH}
                         gcloud auth activate-service-account --key-file=${GOOGLE_APPLICATION_CREDENTIALS}
                         gcloud config set project ${GCP_PROJECT}
-                        dvc pull
+                        
+                        # Enable DVC cache for faster builds
+                        dvc pull --run-cache
                     '''
                 }
             }
@@ -39,32 +41,52 @@ pipeline {
 
         stage('Build & Push Docker Image') {
             steps {
-                withCredentials([file(credentialsId: 'gcp-key', variable: 'GOOGLE_APPLICATION_CREDENTIALS')]) {
-                    sh '''
-                        export PATH=$PATH:${GCLOUD_PATH}
-                        gcloud auth activate-service-account --key-file=${GOOGLE_APPLICATION_CREDENTIALS}
-                        gcloud config set project ${GCP_PROJECT}
-                        gcloud auth configure-docker --quiet
+                script {
+                    // Use BUILD_NUMBER as version tag
+                    def versionTag = "${BUILD_NUMBER}"
+                    withCredentials([file(credentialsId: 'gcp-key', variable: 'GOOGLE_APPLICATION_CREDENTIALS')]) {
+                        sh """
+                            export PATH=\$PATH:${GCLOUD_PATH}
+                            gcloud auth activate-service-account --key-file=${GOOGLE_APPLICATION_CREDENTIALS}
+                            gcloud config set project ${GCP_PROJECT}
+                            gcloud auth configure-docker --quiet
 
-                        docker build --no-provenance --no-sbom \
-                          -t ${IMAGE_NAME}:latest .
+                            # Build Docker with BuildKit, multi-stage Dockerfile
+                            docker build --build-arg GCP_PROJECT=${GCP_PROJECT} \
+                                         --no-cache \
+                                         --progress=plain \
+                                         -t ${IMAGE_NAME}:${versionTag} .
 
-                        docker push ${IMAGE_NAME}:latest
-                    '''
+                            # Tag latest
+                            docker tag ${IMAGE_NAME}:${versionTag} ${IMAGE_NAME}:latest
+
+                            # Push both tags
+                            docker push ${IMAGE_NAME}:${versionTag}
+                            docker push ${IMAGE_NAME}:latest
+                        """
+                    }
                 }
             }
         }
 
         stage('Deploy to GKE') {
             steps {
-                withCredentials([file(credentialsId: 'gcp-key', variable: 'GOOGLE_APPLICATION_CREDENTIALS')]) {
-                    sh '''
-                        export PATH=$PATH:${GCLOUD_PATH}:${KUBECTL_AUTH_PLUGIN}
-                        gcloud auth activate-service-account --key-file=${GOOGLE_APPLICATION_CREDENTIALS}
-                        gcloud config set project ${GCP_PROJECT}
-                        gcloud container clusters get-credentials anime-app-cluster --region us-central1
-                        kubectl apply -f deployment.yaml
-                    '''
+                script {
+                    def versionTag = "${BUILD_NUMBER}"
+                    withCredentials([file(credentialsId: 'gcp-key', variable: 'GOOGLE_APPLICATION_CREDENTIALS')]) {
+                        sh """
+                            export PATH=\$PATH:${GCLOUD_PATH}:${KUBECTL_AUTH_PLUGIN}
+                            gcloud auth activate-service-account --key-file=${GOOGLE_APPLICATION_CREDENTIALS}
+                            gcloud config set project ${GCP_PROJECT}
+                            gcloud container clusters get-credentials anime-app-cluster --region us-central1
+
+                            # Apply config first
+                            kubectl apply -f deployment.yaml
+
+                            # Rolling update with new image tag
+                            kubectl set image deployment/anime-app anime-app=${IMAGE_NAME}:${versionTag} --record
+                        """
+                    }
                 }
             }
         }
@@ -72,10 +94,10 @@ pipeline {
 
     post {
         always {
-            echo 'Cleaning up Docker...'
+            echo 'Cleaning up Docker caches...'
             sh '''
-                docker image prune -a -f
-                docker builder prune -f
+                docker image prune -f --filter "until=24h"
+                docker builder prune -f --filter "until=24h"
             '''
         }
     }
