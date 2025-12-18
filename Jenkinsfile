@@ -24,20 +24,26 @@ pipeline {
             }
         }
 
+
         stage('DVC Pull') {
             steps {
                 withCredentials([file(credentialsId: 'gcp-key', variable: 'GOOGLE_APPLICATION_CREDENTIALS')]) {
                     sh '''
-                        export PATH=$PATH:${GCLOUD_PATH}
+                        python -m venv venv
+                        . venv/bin/activate
+                        pip install --upgrade pip
+                        pip install dvc
+
+                        export PATH=$PATH:/var/jenkins_home/google-cloud-sdk/bin
                         gcloud auth activate-service-account --key-file=${GOOGLE_APPLICATION_CREDENTIALS}
-                        gcloud config set project ${GCP_PROJECT}
-                        
-                        # Enable DVC cache for faster builds
+                        gcloud config set project credit-risk-071125
+
                         dvc pull --run-cache
                     '''
                 }
             }
         }
+
 
         stage('Build & Push Docker Image') {
             steps {
