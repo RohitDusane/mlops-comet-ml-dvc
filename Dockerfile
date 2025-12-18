@@ -26,7 +26,7 @@ COPY . .
 RUN pip install --no-cache-dir -r requirements.txt
 
 # Install TensorFlow separately (optional, you could include in requirements.txt)
-RUN pip install tensorflow-cpu==2.20.0 --no-cache-dir --progress-bar=on -v
+RUN pip install tensorflow-cpu==2.13.0 --no-cache-dir --progress-bar=on -v
 RUN pip install dvc --no-cache-dir
 
 # (Optional) Pre-train model during image build
