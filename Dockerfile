@@ -27,8 +27,10 @@ COPY . .
 
 # Install Python dependencies + TensorFlow + DVC in a single layer
 RUN pip install --no-cache-dir --default-timeout=600 --retries 10 -r requirements.txt \
-    && pip install --no-cache-dir --default-timeout=600 --retries 10 tensorflow-cpu dvc \
     && rm -rf /root/.cache/pip
+RUN pip install tensorflow-cpu==2.13.0 --no-cache-dir --progress-bar=on -v \
+    && rm -rf /root/.cache/pip
+RUN pip install dvc --no-cache-dir
 
 
 # Expose Flask port
